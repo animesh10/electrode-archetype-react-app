@@ -1,0 +1,32 @@
+language: node_js
+
+node_js:
+  - v6
+
+branches:
+  only:
+    - master
+
+before_install:
+  - npm install -g gulp yo generator-electrode
+  - currentfolder=${PWD##*/}
+  - if [ "$currentfolder" != 'electrode-archetype-react-app' ]; then cd .. && eval "mv $currentfolder electrode-archetype-react-app" && cd electrode-archetype-react-app; fi
+  - npm install
+  - cd dev ; npm install ; cd ..
+
+before_script:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+
+script:
+  # run the archetype check task.
+  - gulp archetype:check
+
+  # create a new component using electrode-component yeoman generator to run the components unit-tests.
+  - mkdir test
+  - cd test
+  - yo electrode --name=test --description="Test app" --homepage="walmart.com" --authorName="Animesh Dutta" --authorEmail=animesh10@gh.com --authorUrl="walmart.com" --keywords="electrode" --createDirectory=Y
+  
+  # run ci tests and generate a bundle.
+  - gulp check-ci
+  - gulp build
