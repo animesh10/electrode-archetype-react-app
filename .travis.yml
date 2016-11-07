@@ -19,14 +19,11 @@ before_script:
   - sh -e /etc/init.d/xvfb start
 
 script:
-  # run the archetype check task.
-  - gulp archetype:check
 
   # create a new component using electrode-component yeoman generator to run the components unit-tests.
-  - mkdir test
-  - cd test
+  - mkdir test; cd test
   - yo electrode --name=test --description="Test app" --homepage="walmart.com" --authorName="Animesh Dutta" --authorEmail=animesh10@gh.com --authorUrl="walmart.com" --keywords="electrode" --createDirectory=Y
-  
+
   # run ci tests and generate a bundle.
   - gulp check-ci
   - gulp build
